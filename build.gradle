@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    group = 'com.devsm'
+    version = '0.0.1'
+    sourceCompatibility = '21'
+
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-test-fixtures'
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext {
+        set('springCloudVersion', "2023.0.1")
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+    bootJar { enabled = false }
+    jar { enabled = true }
+}
+
+// import 할 수 있게 만들어줌
+project(':product-service') {
+    dependencies {
+        implementation project(':common-server')
+        implementation(testFixtures(project(":common-server")))
+    }
+}
+
+project(':user-service') {
+    dependencies {
+        implementation project(':common-server')
+        implementation(testFixtures(project(":common-server")))
+    }
+}
+project(':order-service') {
+    dependencies {
+        implementation project(':common-server')
+        implementation(testFixtures(project(":common-server")))
+    }
+}
